@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# do not run this - it is extremely slow
+# I should have used a sieve of Eratosthenes
+
 $primes = [2, 3]
 
 def notprime(n)
