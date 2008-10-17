@@ -32,7 +32,7 @@ amsum = 0
 
 (1...10000).each do |i|
 	current = d(i)
-	if d(current) == i
+	if (d(current) == i) and (current != i)
 		amsum += i
 	end
 end
