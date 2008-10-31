@@ -51,7 +51,7 @@ $primefactors = Hash.new do |h,key|
 		i += 1
 		p = prime(i)
 	end
-	if h[key].empty
+	if h[key].empty?
 		h[key] << key
 	end
 	h[key]
@@ -62,9 +62,9 @@ def fshare(n, factors)
 	if factors.empty?
 		0
 	else
-		fs = (n / factors.head) + fshare(n, factors.tail)
-		factors.tail.each do |factor|
-			fs -= n / (factors.head * factor)
+		fs = (n / factors.first) + fshare(n, factors[1..-1])
+		factors[1..-1].each do |factor|
+			fs -= n / (factors.first * factor)
 		end
 		fs
 	end
@@ -78,8 +78,12 @@ end
 # remove all those multiples from the set 1..n-1
 # count remaining set members - that's your k
 def totient(n)
-	factors = $primefactors[n]
-	n - fshare(n, factors)
+	tot = n
+	$primefactors[n].each do |f|
+		tot /= f
+		tot *= (f-1)
+	end
+	tot
 end
 
 $chainlen = Hash.new do |h,key|
@@ -87,20 +91,26 @@ $chainlen = Hash.new do |h,key|
 end
 $chainlen[1] = 1
 
-primesum = 0
-
-# all primes > 3 are 6x +/- 1
-# we don't need to bother testing multiples of 2 or 3
-(1..6666666).each do |i|
-	if ($primefactors[i*6-1].length == 1) and ($chainlen[i*6-1] == 25)
-		primesum += i*6-1
-		puts i*6-1
+def findsum
+	primesum = 0
+	# all primes > 3 are 6x +/- 1
+	# we don't need to bother testing multiples of 2 or 3
+	(1..6666666).each do |i|
+		if ($primefactors[i*6-1].length == 1) and ($chainlen[i*6-1] == 25)
+			primesum += i*6-1
+			puts i*6-1
+		end
+		if ($primefactors[i*6+1].length == 1) and ($chainlen[i*6+1] == 25)
+			primesum += i*6+1
+			puts i*6+1
+		end
 	end
-	if ($primefactors[i*6+1].length == 1) and ($chainlen[i*6+1] == 25)
-		primesum += i*6+1
-		puts i*6+1
-	end
+	primesum
 end
 
-puts 'the answer'
+(1..15).each do |i|
+	puts i.to_s + ': ' + totient(i).to_s
+	p $primefactors[i]
+end
+
 puts (Time.now - starttime).round.to_s + ' seconds'
