@@ -1,0 +1,1 @@
+erl -pz ./ -run compile file testthis -run testthis -run init stop -noshell

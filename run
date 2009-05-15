@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+name = ARGV[0].to_i.to_s.rjust(3,'0')
+
+result = %x[erl -run compile file #{name} -run #{name} -run init stop -noshell]
+
+puts result
