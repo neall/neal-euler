@@ -2,12 +2,16 @@
 
 name = ARGV[0].to_i.to_s.rjust(3,'0')
 
+starttime = Time.now
+puts starttime.strftime('%Y-%m-%d %H:%M:%S')
 puts "Compiling\n"
-
 result = %x[erl -run compile file #{name} -run init stop -noshell]
 
+runtime = Time.now
+puts (runtime - starttime).to_s + ' seconds'
 puts "Running\n"
 
 result = %x[erl -run #{name} -run init stop -noshell]
 
+puts (Time.now - runtime).to_s + ' seconds'
 puts result
